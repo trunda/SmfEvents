@@ -65,7 +65,9 @@ class AnnotationScanner extends Object
             $this->robotLoader->setCacheStorage(new DevNullStorage);
         }
 
-        $this->robotLoader->scanDirs = $this->scanDirs;
+        foreach ($this->scanDirs as $scanDir) {
+            $this->robotLoader->addDirectory($scanDir);
+        }
         return $this->robotLoader;
     }
 }

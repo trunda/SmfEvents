@@ -1,18 +1,27 @@
 <?php
 namespace Smf\Events\Config;
 
+use Nette;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
-use Nette\Config\Compiler;
-use Nette\Config\CompilerExtension;
-use Nette\Config\Configurator;
 use Nette\DI\Container;
 use Nette\DI\ServiceDefinition;
 use Nette\Loaders\RobotLoader;
 use Smf\Events\Event;
 use Smf\Events\IEventDispatcher;
 
-class Extension extends CompilerExtension
+if (!class_exists('Nette\DI\CompilerExtension')) {
+    class_alias('Nette\Config\CompilerExtension', 'Nette\DI\CompilerExtension');
+    class_alias('Nette\Config\Compiler', 'Nette\DI\Compiler');
+    class_alias('Nette\Config\Helpers', 'Nette\DI\Config\Helpers');
+}
+
+if (isset(Nette\Loaders\NetteLoader::getInstance()->renamed['Nette\Configurator']) || !class_exists('Nette\Configurator')) {
+    unset(Nette\Loaders\NetteLoader::getInstance()->renamed['Nette\Configurator']); // fuck you
+    class_alias('Nette\Config\Configurator', 'Nette\Configurator');
+}
+
+class Extension extends Nette\DI\CompilerExtension
 {
     const DEFAULT_EXTENSION_NAME = 'eventDispatcher',
         LISTENER_TAG_NAME = 'eventDispatcherListener',
